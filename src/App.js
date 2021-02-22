@@ -1,25 +1,70 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import {
+  BusyIndicator,
+  ThemeProvider,
+  ShellBar,
+  Button
+} from "@ui5/webcomponents-react";
+import { boot } from "./ui5";
 
-function App() {
+export default function App() {
+  const [load, setLoad] = useState(false);
+  const [inProgress, setInProgress] = useState(false);
+  useEffect(() => {
+    if (load) {
+      setInProgress(true);
+      boot().then((sap) => {
+        // CODE COPIED FROM SNIPPIX EXAMPLE
+
+        // define a new (simple) Controller type
+        sap.ui.controller("my.own.controller", {
+          // implement an event handler in the Controller
+          doSomething: function () {
+            alert("Hello World!");
+          }
+        });
+
+        // define a new (simple) View type as an XmlView
+        // - using data binding for the Button text
+        // - binding a controller method to the Button's "press" event
+        // - also mixing in some plain HTML
+        // note: typically this would be a standalone file
+        var xml =
+          '<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m"            ' +
+          '              controllerName="my.own.controller">                   ' +
+          '       <Panel headerText="Hello World">                             ' +
+          '          <Button text="{/actionName}" press="doSomething"></Button>' +
+          "       </Panel>                                                     " +
+          "    </mvc:View>                                                     ";
+
+        /*** THIS IS THE "APPLICATION" CODE ***/
+
+        // create some dummy JSON data
+        var data = {
+          actionName: "Say Hello"
+        };
+
+        // instantiate the View
+        var myView = sap.ui.xmlview({ viewContent: xml });
+
+        // create a Model and assign it to the View
+        var oModel = new sap.ui.model.json.JSONModel();
+        oModel.setData(data);
+        myView.setModel(oModel);
+
+        // put the View onto the screen
+        myView.placeAt("content");
+
+        setInProgress(false);
+      });
+    }
+  }, [load]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider>
+      {inProgress && <BusyIndicator active={true} size="L" />}
+      <ShellBar primaryTitle="UI5 Web Components for React Issue Template" />
+      {!load && <Button onClick={() => setLoad(true)}>Load UI5</Button>}
+      <div id="content"></div>
+    </ThemeProvider>
   );
 }
-
-export default App;
