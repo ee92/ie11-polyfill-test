@@ -1,10 +1,6 @@
+import "@ui5/webcomponents/dist/BusyIndicator";
+import "@ui5/webcomponents/dist/Button";
 import React, { useEffect, useState } from "react";
-import {
-  BusyIndicator,
-  ThemeProvider,
-  ShellBar,
-  Button
-} from "@ui5/webcomponents-react";
 import { boot } from "./ui5";
 
 export default function App() {
@@ -45,7 +41,8 @@ export default function App() {
         };
 
         // instantiate the View
-        var myView = sap.ui.xmlview({ viewContent: xml });
+        var myView = new sap.ui.xmlview({ viewContent: xml });
+        console.log(myView);
 
         // create a Model and assign it to the View
         var oModel = new sap.ui.model.json.JSONModel();
@@ -60,11 +57,9 @@ export default function App() {
     }
   }, [load]);
   return (
-    <ThemeProvider>
-      {inProgress && <BusyIndicator active={true} size="L" />}
-      <ShellBar primaryTitle="UI5 Web Components for React Issue Template" />
-      {!load && <Button onClick={() => setLoad(true)}>Load UI5</Button>}
+    <ui5-busyindicator active={inProgress ? true : undefined} size="L" >
+      {!load && <ui5-button onClick={() => setLoad(true)}>Load UI5</ui5-button>}
       <div id="content"></div>
-    </ThemeProvider>
+    </ui5-busyindicator>
   );
 }

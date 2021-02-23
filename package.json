@@ -3,8 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@ui5/webcomponents-react": "0.13.4",
+    "@ui5/webcomponents": "^0.29.0",
+    "@ui5/webcomponents-base": "^0.29.0",
+    "@ui5/webcomponents-fiori": "^0.29.0",
+    "@ui5/webcomponents-icons": "^0.29.0",
+    "@webcomponents/webcomponentsjs": "^2.4.0",
     "react": "^17.0.1",
+    "react-app-polyfill": "^2.0.0",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.3"
   },
